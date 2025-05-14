@@ -10,38 +10,39 @@ class BookList extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
+  };
 
-    this.setState({searchedParam: e.target.value})
+  handleChange = value => {
+    this.setState({ searchedParam: value });
   };
 
   render() {
     return (
       <>
-        {this.state.searchedParam === "" ? 
-        <>
         <Container>
-          <InputGroup className="mb-3" >
-            <Form.Control placeholder="Cerca un libro" aria-label="Username" aria-describedby="basic-addon1" onSubmit={this.handleSubmit} />
-            <Button variant="outline-secondary" id="searchBtn" type="submit">
-              Cerca
-            </Button>
-          </InputGroup>
+          <Form onSubmit={this.handleSubmit}>
+            <Form.Group className="mb-3" controlId="name">
+              <Form.Control type="text" placeholder="Cerca un libro" onChange={e => this.handleChange(e.target.value)} />
+            </Form.Group>
+          </Form>
         </Container>
         <Container fluid>
-          <Row xs={1} md={3} lg={6} className="gy-2">
-            {this.props.lista.map(book => (
-              <SingleBook libro={book} />
-            ))}
-          </Row>
-          </Container> : 
-          {this.props.lista.filter((libro) => libro.title.toLowerCase().includes(this.state.searchedParam.toLowerCase()).map(libro => (
-            <Container fluid>
-              <Row xs={1} md={3} lg={6} className="gy-2">
-                <SingleBook libro={libro} />
-              </Row>
-            </Container>
-          )))}}
-        </>
+          {this.state.searchedParam === "" ? (
+            <Row xs={1} md={3} lg={6} className="gy-2">
+              {this.props.lista.map(book => (
+                <SingleBook libro={book} />
+              ))}
+            </Row>
+          ) : (
+            <Row xs={1} md={3} lg={6} className="gy-2">
+              {this.props.lista
+                .filter(libro => libro.title.toLowerCase().includes(this.state.searchedParam.toLowerCase()))
+                .map(book => (
+                  <SingleBook libro={book} />
+                ))}
+            </Row>
+          )}
+        </Container>
       </>
     );
   }
